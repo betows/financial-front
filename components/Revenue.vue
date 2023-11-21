@@ -122,11 +122,8 @@ export default {
       });
     },
     formatYYYYMMDD(date) {
-      let formattedDate = new Date(date);
-      let year = formattedDate.getFullYear();
-      let month = formattedDate.getMonth() + 1;
-      let day = formattedDate.getDate();
-      return `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
+      const formattedDate = new Date(date);
+      return formattedDate.toISOString().split("T")[0];
     }
   }
 };
