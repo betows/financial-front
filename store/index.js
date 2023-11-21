@@ -33,33 +33,33 @@ export const actions = {
     });
   },
   getBalance(context, data) {
-    return this.$axios.get("/balance", data).then((r) => {
+    return this.$axios.get("http://localhost:8080/api/balance", data).then((r) => {
       context.commit("setBalance", r.data);
     });
   },
   getCurrentBalance(context, data) {
-    return this.$axios.get("/current-balance", data).then((r) => {
+    return this.$axios.get("http://localhost:8080/api/current-balance", data).then((r) => {
       context.commit("setCurrentBalance", r.data);
     });
   },
   getIncome(context, data) {
-    return this.$axios.get("/income/", data).then((r) => {
+    return this.$axios.get("http://localhost:8080/api/income/", data).then((r) => {
       context.commit("setIncome", r.data);
     });
   },
   getExpense(context, data) {
-    return this.$axios.get("/expense", data).then((r) => {
+    return this.$axios.get("http://localhost:8080/api/expense", data).then((r) => {
       context.commit("setExpense", r.data);
     });
   },
   addTransaction(context, data) {
-    return this.$axios.post("/transactions", data);
+    return this.$axios.post("http://localhost:8080/api/transactions", data);
   },
   deleteTransaction(context, data) {
-    return this.$axios.delete("/transactions/" + data);
+    return this.$axios.delete("http://localhost:8080/api/transactions" + data);
   },
   getTransaction(context, data) {
-    return this.$axios.get("/transactions/" + data);
+    return this.$axios.get("http://localhost:8080/api/transactions" + data);
   },
   addIncome(context, data) {
     return this.$axios.post("http://localhost:8080/api/income", data).then((r) => {
@@ -67,7 +67,7 @@ export const actions = {
     });
   },
   addExpense(context, data) {
-    return this.$axios.post("/expense", data).then((r) => {
+    return this.$axios.post("http://localhost:8080/api/expense", data).then((r) => {
       context.commit("setExpense", r.data);
     });
   }

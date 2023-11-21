@@ -31,6 +31,7 @@
                     label="Valor"
                     outlined
                     type="number"
+                    :v-mask="'###.##'"
                     required
                     dense
                   />
@@ -86,7 +87,7 @@ export default {
     return {
       newRevenue: {
         category: "",
-        amount: null,
+        amount: 0,
         date: "",
         type: "RECEITA"
       },
@@ -108,8 +109,7 @@ export default {
   },
   methods: {
     addRevenue() {
-      this.newRevenue.date = this.formatYYYYMMDD(this.newRevenue.date);
-      this.newRevenue.amount = parseFloat(this.newRevenue.amount);
+      this.newRevenue.date = this.formatDate(this.newRevenue.date);
       this.$store.dispatch("addIncome", this.newRevenue).then(() => {
         this.fetchIncome(this.newRevenue.date);
       }).catch((error) => {
@@ -121,9 +121,8 @@ export default {
         this.newRevenue.amount = this.$store.state.balance;
       });
     },
-    formatYYYYMMDD(date) {
-      const formattedDate = new Date(date);
-      return formattedDate.toISOString().split("T")[0];
+    formatDate(date) {
+      return date.split("-").reverse().join("/");
     }
   }
 };
