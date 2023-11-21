@@ -3,7 +3,7 @@
   <div>
     <h1>Controle de finanças pessoais</h1>
     <!-- Componentes para inclusão de receitas e despesas -->
-    <Revenue style="margin-top: 16px;" />
+    <Revenue style="margin: 16px 0 32px;" />
   </div>
 </template>
 

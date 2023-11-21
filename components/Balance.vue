@@ -10,8 +10,8 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <v-alert v-if="currentBalance !== null" :value="true" type="info">
-                  Seu saldo atual é de: R$ {{ currentBalance }}
+                <v-alert v-if="currentBalance !== null" :value="true" :color="currentBalance > 0 ? '#50C878' : '#FF5733'">
+                  <v-icon> mdi-currency-usd </v-icon>  Seu saldo atual é de: R$ {{ currentBalance }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">
                   Sem dados disponíveis
@@ -29,27 +29,22 @@
 export default {
   data() {
     return {
-      currentBalance: null // You should fetch the current balance from your backend
     };
   },
-  // You may want to fetch the current balance when the component is created
-  created() {
-    this.fetchCurrentBalance();
+  props: {
+    currentBalance: {
+      type: Number,
+      required: true
+    }
   },
   computed: {
-    balance() {
-      return this.$store.state.balance;
-    },
     formattedCurrentBalance() {
       return this.currentBalance ? this.currentBalance.toFixed(2) : null;
     }
   },
   methods: {
-    // Simulate fetching the current balance from the backend
-    fetchCurrentBalance() {
-      this.$store.dispatch("getCurrentBalance").then(() => {
-        this.currentBalance = this.balance;
-      });
+    getIcon() {
+      return this.currentBalance > 0 ? "mdi-arrow-top-right-thick" : "mdi-arrow-bottom-right-thick";
     }
   }
 };

@@ -23,8 +23,8 @@
 
             <v-row>
               <v-col>
-                <v-alert v-if="futureBalance !== null" :value="true" type="info">
-                  Seu saldo projetado será de: R$ {{ futureBalance }}
+                <v-alert v-if="futureBalance !== null" :value="true" :color="futureBalance > 0 ? '#50C878' : '#FF5733'">
+                  <v-icon> mdi-account-cash-outline </v-icon> saldo projetado é de: R$ {{ futureBalance }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">
                   Sem dados de projeção disponíveis
@@ -42,29 +42,16 @@
 export default {
   data() {
     return {
-      futureBalanceDate: "", // Date for projecting the future balance
-      futureBalance: null   // Projected future balance
+      futureBalanceDate: ""
     };
   },
-  mounted() {
-    this.fetchFutureBalance();
-  },
-  computed: {
-    fetchedFutureBalance() {
-      return this.$store.state.futureBalance;
+  props: {
+    futureBalance: {
+      type: Number,
+      required: true
     }
   },
   methods: {
-    calculateFutureBalance() {
-      // Implement logic to calculate the future balance based on your backend data
-      // For now, let's use a mock value
-      this.futureBalance = 6000; // Mock future balance
-    },
-    fetchFutureBalance() {
-      this.$store.dispatch("getBalance").then(() => {
-        this.futureBalance = this.$store.state.balance;
-      });
-    }
   }
 };
 </script>

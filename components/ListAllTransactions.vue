@@ -9,10 +9,12 @@
           <v-col>
             <v-select
               v-model="selectedFilters"
-              :items="transactionFilters"
+              :items="categories"
               label="Filtrar por categoria"
               outlined
               multiple
+              item-text="text"
+              item-value="value"
               chips
               small-chips
               allow-overflow
@@ -21,7 +23,7 @@
             >
               <template #selection="{ item }">
                 <v-chip small>
-                  {{ item }}
+                  {{ item.text }}
                   <v-icon style="padding-left: 8px;" small @click="selectedFilters.splice(selectedFilters.indexOf(item), 1)">
                     mdi-close
                   </v-icon>
@@ -39,10 +41,11 @@
             <v-list>
               <v-list-item-group v-if="filteredTransactions.length > 0">
                 <v-list-item v-for="transaction in filteredTransactions" :key="transaction.id">
-                  <v-list-item-content>
-                    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-                      <div>
-                        {{ transaction.category }}
+                  <v-list-item-content style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
+                      <!-- Fixed width for the category column -->
+                      <div style="width: 150px;">
+                        {{ formatCategory(transaction.category) }}
                       </div>
                       <div>
                         R$ {{ transaction.amount }} 
@@ -50,10 +53,9 @@
                       <div>
                         {{ formatDate(transaction.date) }}
                       </div>
-                      
                       <!-- <v-icon small @click="deleteTransaction(transaction.id)">
-                        mdi-delete
-                      </v-icon> -->
+                  mdi-delete
+                </v-icon> -->
                     </div>
                   </v-list-item-content>
                 </v-list-item>
@@ -73,22 +75,20 @@
 export default {
   data() {
     return {
-      selectedFilters: [],       
-      transactionFilters: []    
+      selectedFilters: []       
     };
   },
-  mounted() {
-    this.fetchTransactions();
+  props: {
+    transactions: {
+      type: Array,
+      required: true
+    },
+    categories: {
+      type: Array,
+      required: true
+    }
   },
   computed: {
-    transactions: {
-      get() {
-        return this.$store.state.transactions;
-      },
-      set(value) {
-        this.$store.commit("setTransactions", value);
-      }
-    },
     filteredTransactions() {
       // Filter transactions based on the selected categories
       return this.selectedFilters.length > 0
@@ -97,15 +97,35 @@ export default {
     }
   },
   methods: {
-    // Simulate fetching transactions from the backend
-    fetchTransactions() {
-      this.$store.dispatch("getTransactions").then(() => {
-        this.transactionFilters = [...new Set(this.transactions.map(transaction => transaction.category))];
-      });
-    },
     formatDate(date) {
       let formattedDate = new Date(date);
       return formattedDate.toLocaleDateString("pt-BR");
+    },
+    formatCategory(category) {
+      switch (category) {
+      case "SALARIO":
+        return "Salário";
+      case "DECIMO_TERCEIRO":
+        return "Décimo terceiro";
+      case "FERIAS":
+        return "Férias";
+      case "OUTROS":
+        return "Outros";
+      case "ALIMENTACAO":
+        return "Alimentação";
+      case "TRANSPORTE":
+        return "Transporte";
+      case "RESIDENCIA":
+        return "Residência";
+      case "SAUDE":
+        return "Saúde";
+      case "EDUCACAO":
+        return "Educação";
+      case "ENTRETENIMENTO":
+        return "Entretenimento";
+      default:
+        return "Outros";
+      }
     }
   }
 };

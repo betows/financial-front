@@ -1,6 +1,6 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="drawer"
       :mini-variant="miniVariant"
       :clipped="clipped"
@@ -24,13 +24,13 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <v-app-bar
       :clipped-left="clipped"
       fixed
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> -->
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
     </v-app-bar>
@@ -61,21 +61,6 @@ export default {
           icon: "mdi-apps",
           title: "Início",
           to: "/"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "Saldo",
-          to: "/balance"
-        },
-        {
-          icon: "mdi-cash",
-          title: "Saldo futuro",
-          to: "/future-balance"
-        },
-        {
-          icon: "mdi-currency-usd",
-          title: "Transações",
-          to: "/transactions"
         }
       ],
       miniVariant: false,

@@ -16,8 +16,10 @@
                 <v-col>
                   <v-select
                     v-model="newRevenue.category"
-                    :items="categoriasReceita"
+                    :items="revenueCategories"
                     label="Categoria"
+                    item-text="text"
+                    item-value="value"
                     outlined
                     required
                     dense
@@ -47,22 +49,22 @@
                 </v-col>
 
                 <v-col>
-                  <v-btn type="submit" color="success">
+                  <v-btn type="submit" color="primary">
                     Adicionar Receita
                   </v-btn>
                 </v-col>
               </v-row>
             </v-form>
           </v-card-text>
-          <Expense />
+          <Expense :expense-categories="expenseCategories" />
         </v-card>
-        <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 24px; gap: 26px;">
-          <Balance style="padding: 0px; border-radius: 12px; height: auto;" />
-          <FutureBalance style="padding: 0px; border-radius: 12px;" />
+        <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 24px; gap: 26px; margin-bottom: 16px;">
+          <Balance :current-balance="currentBalance" style="padding: 0px; border-radius: 12px; height: auto;" />
+          <FutureBalance :future-balance="balance" style="padding: 0px; border-radius: 12px;" />
         </div>
 
         <!-- Listagem de receitas -->
-        <ListAllTransactions v-if="!loadingIncome" style="margin-top: 24px;" />
+        <ListAllTransactions :transactions="transactions" :categories="allCategories" style="margin-top: 24px;" />
       </v-col>
     </v-row>
   </v-container>
@@ -85,25 +87,81 @@ export default {
     return {
       newRevenue: {
         category: "",
-        amount: 0,
+        amount: null,
         date: "",
         type: "RECEITA"
       },
       loadingIncome: false,
-      categoriasReceita: ["SALARIO", "DECIMO_TERCEIRO", "FERIAS", "OUTROS"]
+      revenueCategories: [{
+        text: "Salário",
+        value: "SALARIO"
+      }, 
+      {
+        text: "Décimo terceiro",
+        value: "DECIMO_TERCEIRO"
+      }, 
+      {
+        text: "Férias",
+        value: "FERIAS"
+      }, 
+      {
+        text: "Outros",
+        value: "OUTROS"
+      }],
+      expenseCategories: [{
+        text: "Alimentação",
+        value: "ALIMENTACAO"
+      },
+      {
+        text: "Educação",
+        value: "EDUCACAO"
+      },
+      {
+        text: "Entretenimento",
+        value: "ENTRETENIMENTO"
+      },
+      {
+        text: "Residência",
+        value: "RESIDENCIA"
+      },
+      {
+        text: "Saúde",
+        value: "SAUDE"
+      },
+      {
+        text: "Transporte",
+        value: "TRANSPORTE"
+      },
+      {
+        text: "Outros",
+        value: "OUTROS"
+      }]
     };
   },
   mounted() {
     let nowDate = new Date();
     this.fetchIncome(nowDate);
-    this.$store.dispatch("getTransactions", nowDate);
   },
   computed: {
     fetchedIncome() {
       return this.$store.state.income;
     },
-    transactions() {
-      return this.$store.state.transactions;
+    allCategories() {
+      return this.revenueCategories.concat(this.expenseCategories);
+    },
+    transactions: {
+      get() {
+        return this.$store.state.transactions;
+      },
+      set(value) {
+        this.$store.commit("setTransactions", value);
+      }
+    },
+    balance() {
+      return this.$store.state.balance;
+    },
+    currentBalance() {
+      return this.$store.state.currentBalance;
     }
   },
   methods: {

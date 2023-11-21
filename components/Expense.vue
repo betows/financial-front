@@ -14,6 +14,8 @@
                 <v-select
                   v-model="expense.category"
                   :items="expenseCategories"
+                  item-text="text"
+                  item-value="value"
                   label="Categoria"
                   outlined
                   required
@@ -45,7 +47,7 @@
               </v-col>
 
               <v-col>
-                <v-btn type="submit" color="success">
+                <v-btn type="submit" color="primary">
                   Adicionar Despesa
                 </v-btn>
               </v-col>
@@ -61,21 +63,19 @@
 export default {
   data() {
     return {
-      expenseCategories: [
-        "ALIMENTACAO",
-        "TRANSPORTE",
-        "RESIDENCIA",
-        "SAUDE",
-        "EDUCACAO",
-        "ENTRETENIMENTO",
-        "OUTROS"
-      ],
       expense: {
         category: "",
         amount: "",
-        date: ""
+        date: "",
+        type: "EXPENSE"
       }
     };
+  },
+  props: {
+    expenseCategories: {
+      type: Array,
+      required: true
+    }
   },
   methods: {
     addExpense() {
