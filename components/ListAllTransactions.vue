@@ -40,14 +40,14 @@
           <v-col>
             <v-list>
               <v-list-item-group v-if="filteredTransactions.length > 0">
-                <v-list-item v-for="transaction in filteredTransactions" :key="transaction.id">
+                <v-list-item v-for="(transaction, index) in filteredTransactions" :key="index">
                   <v-list-item-content style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
                     <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
                       <!-- Fixed width for the category column -->
                       <div style="width: 150px;">
                         {{ formatCategory(transaction.category) }}
                       </div>
-                      <div>
+                      <div :style="'color: ' + getTransactionColor(transaction)">
                         R$ {{ transaction.amount }} 
                       </div>
                       <div>
@@ -126,6 +126,9 @@ export default {
       default:
         return "Outros";
       }
+    },
+    getTransactionColor(transaction) {
+      return transaction.type === "RECEITA" ? "#0FFF50" : "#FF3131";
     }
   }
 };

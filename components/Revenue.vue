@@ -49,7 +49,7 @@
                 </v-col>
 
                 <v-col>
-                  <v-btn type="submit" color="primary">
+                  <v-btn type="submit" color="#2E8B57">
                     Adicionar Receita
                   </v-btn>
                 </v-col>

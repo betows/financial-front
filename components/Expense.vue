@@ -47,7 +47,7 @@
               </v-col>
 
               <v-col>
-                <v-btn type="submit" color="primary">
+                <v-btn type="submit" color="#880808">
                   Adicionar Despesa
                 </v-btn>
               </v-col>

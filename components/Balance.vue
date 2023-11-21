@@ -10,7 +10,7 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <v-alert v-if="currentBalance !== null" :value="true" :color="currentBalance > 0 ? '#50C878' : '#FF5733'">
+                <v-alert v-if="currentBalance !== null" :value="true" :color="currentBalance > 0 ? '#2E8B57' : '#880808'">
                   <v-icon> mdi-currency-usd </v-icon>  Seu saldo atual é de: R$ {{ currentBalance }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">

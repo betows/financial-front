@@ -23,7 +23,7 @@
 
             <v-row>
               <v-col>
-                <v-alert v-if="futureBalance !== null" :value="true" :color="futureBalance > 0 ? '#50C878' : '#FF5733'">
+                <v-alert v-if="futureBalance !== null" :value="true" :color="futureBalance > 0 ? '#2E8B57' : '#880808'">
                   <v-icon> mdi-account-cash-outline </v-icon> saldo projetado é de: R$ {{ futureBalance }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">
