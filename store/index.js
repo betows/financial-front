@@ -28,7 +28,7 @@ export const mutations = {
 
 export const actions = {
   getTransactions(context, data) {
-    return this.$axios.get("/transactions", data).then((r) => {
+    return this.$axios.get("http://localhost:8080/api/transactions", data).then((r) => {
       context.commit("setTransactions", r.data);
     });
   },
@@ -62,7 +62,7 @@ export const actions = {
     return this.$axios.get("/transactions/" + data);
   },
   addIncome(context, data) {
-    return this.$axios.post("/income/", data, {}).then((r) => {
+    return this.$axios.post("http://localhost:8080/api/income", data).then((r) => {
       context.commit("setIncome", r.data);
     });
   },
