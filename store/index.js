@@ -62,7 +62,7 @@ export const actions = {
     return this.$axios.get("/transactions/" + data);
   },
   addIncome(context, data) {
-    return this.$axios.post("/income", data).then((r) => {
+    return this.$axios.post("/income/", data, {}).then((r) => {
       context.commit("setIncome", r.data);
     });
   },

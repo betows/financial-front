@@ -55,6 +55,7 @@
               </v-row>
             </v-form>
           </v-card-text>
+          <Expense />
         </v-card>
         <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 24px; gap: 26px;">
           <Balance style="padding: 0px; border-radius: 12px; height: auto;" />
@@ -71,20 +72,23 @@
 <script>
 import FutureBalance from "@/components/FutureBalance.vue";
 import ListAllTransactions from "@/components/ListAllTransactions.vue";
+import Expense from "@/components/Expense.vue";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Revenue",
   components: {
     FutureBalance,
-    ListAllTransactions
+    ListAllTransactions,
+    Expense
   },
   data() {
     return {
       newRevenue: {
         category: "",
         amount: null,
-        date: ""
+        date: "",
+        type: "RECEITA"
       },
       categoriasReceita: ["SALARIO", "DECIMO_TERCEIRO", "FERIAS", "OUTROS"]
     };
@@ -104,7 +108,8 @@ export default {
   },
   methods: {
     addRevenue() {
-      this.newRevenue.date = new Date(this.newRevenue.date).toISOString().slice(0, 10);
+      this.newRevenue.date = this.formatYYYYMMDD(this.newRevenue.date);
+      this.newRevenue.amount = parseFloat(this.newRevenue.amount);
       this.$store.dispatch("addIncome", this.newRevenue).then(() => {
         this.fetchIncome(this.newRevenue.date);
       }).catch((error) => {
@@ -115,6 +120,13 @@ export default {
       this.$store.dispatch("getBalance", date).then(() => {
         this.newRevenue.amount = this.$store.state.balance;
       });
+    },
+    formatYYYYMMDD(date) {
+      let formattedDate = new Date(date);
+      let year = formattedDate.getFullYear();
+      let month = formattedDate.getMonth() + 1;
+      let day = formattedDate.getDate();
+      return `${year}-${month < 10 ? "0" + month : month}-${day < 10 ? "0" + day : day}`;
     }
   }
 };

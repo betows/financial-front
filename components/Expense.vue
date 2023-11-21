@@ -1,0 +1,92 @@
+<!-- eslint-disable vue/multi-word-component-names -->
+<template>
+  <v-container style="padding: 0px;">
+    <v-row>
+      <v-col>
+        <v-card-title class="headline">
+          Incluir despesas
+        </v-card-title>
+        <v-card-text>
+          <!-- Formulário para incluir receitas -->
+          <v-form @submit.prevent="addExpense">
+            <v-row>
+              <v-col>
+                <v-select
+                  v-model="expense.category"
+                  :items="expenseCategories"
+                  label="Categoria"
+                  outlined
+                  required
+                  dense
+                  :menu-props="{ offsetY: true }"
+                />
+              </v-col>
+
+              <v-col>
+                <v-text-field
+                  v-model="expense.amount"
+                  label="Valor"
+                  outlined
+                  type="number"
+                  required
+                  dense
+                />
+              </v-col>
+
+              <v-col>
+                <v-text-field
+                  v-model="expense.date"
+                  label="Data"
+                  outlined
+                  type="date"
+                  required
+                  dense
+                />
+              </v-col>
+
+              <v-col>
+                <v-btn type="submit" color="success">
+                  Adicionar Despesa
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      expenseCategories: [
+        "ALIMENTACAO",
+        "TRANSPORTE",
+        "RESIDENCIA",
+        "SAUDE",
+        "EDUCACAO",
+        "ENTRETENIMENTO",
+        "OUTROS"
+      ],
+      expense: {
+        category: "",
+        amount: "",
+        date: ""
+      }
+    };
+  },
+  methods: {
+    addExpense() {
+      this.expense.amount = parseFloat(this.expense.amount);
+      this.$store.dispatch("addExpense", this.expense);
+    }
+  }
+
+};
+</script>
+
+<style>
+
+</style>

@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card style="height: 242px;">
+        <v-card style="height: 242px; border-radius: 12px;">
           <v-card-title class="headline">
             Projeção de saldo futuro
           </v-card-title>
@@ -24,7 +24,7 @@
             <v-row>
               <v-col>
                 <v-alert v-if="futureBalance !== null" :value="true" type="info">
-                  Seu saldo projetado em {{ futureBalanceDate }} será de: R${{ futureBalance }}
+                  Seu saldo projetado será de: R$ {{ futureBalance }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">
                   Sem dados de projeção disponíveis
