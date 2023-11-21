@@ -10,7 +10,7 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <v-alert v-if="currentBalance !== null" :value="true" type="success">
+                <v-alert v-if="currentBalance !== null" :value="true" type="info">
                   Seu saldo atual é de: R$ {{ currentBalance }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">

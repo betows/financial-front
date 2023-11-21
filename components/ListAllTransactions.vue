@@ -1,6 +1,6 @@
 <template>
-  <v-container>
-    <v-card>
+  <v-container style="padding: 0px;">
+    <v-card style="border-radius: 12px;">
       <v-card-title class="headline">
         Todas as transações
       </v-card-title>
@@ -47,7 +47,7 @@
                 </v-list-item>
               </v-list-item-group>
               <v-alert v-else :value="true" type="info">
-                No transactions available.
+                Não há transações disponíveis
               </v-alert>
             </v-list>
           </v-col>
@@ -81,15 +81,11 @@ export default {
   methods: {
     // Simulate fetching transactions from the backend
     fetchTransactions() {
-      // Implement logic to fetch transactions from your backend
-      // For now, let's use mock values
-      this.transactions = [
-        { id: 1, category: "Salary", amount: 5000, date: "2023-01-01" },
-        { id: 2, category: "Groceries", amount: -100, date: "2023-01-02" }
-        // Add more transactions as needed
-      ];      // Populate transaction filters based on available categories
-      this.transactionFilters = [...new Set(this.transactions.map(transaction => transaction.category))];
-      this.transactionFilters.unshift("Todos"); // Add "Todos" option to the beginning
+      this.$store.dispatch("getTransactions").then(() => {
+        this.transactions = this.$store.state.transactions;
+        this.transactionFilters = [...new Set(this.transactions.map(transaction => transaction.category))];
+        this.transactionFilters.unshift("Todos");
+      });
     }
   }
 };

@@ -48,7 +48,7 @@
                 </v-col>
 
                 <v-col>
-                  <v-btn type="submit" color="info">
+                  <v-btn type="submit" color="success">
                     Adicionar Receita
                   </v-btn>
                 </v-col>
@@ -62,35 +62,7 @@
         </div>
 
         <!-- Listagem de receitas -->
-        <v-card 
-          v-if="fetchedIncome.length > 0"
-          style="border-radius: 12px; margin-top: 24px; padding: 8px;"
-        >
-          <v-card-title class="headline">
-            Lista de Receitas
-          </v-card-title>
-          <v-card-text>
-            <v-list>
-              <v-list-item-group v-if="fetchedIncome.length > 0">
-                <v-list-item v-for="(revenue, index) in fetchedIncome" :key="index">
-                  <v-list-item-content>
-                    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%;">
-                      <v-list-item-title>
-                        {{ revenue.category }} R$ {{ revenue.amount }} - {{ revenue.date }}
-                      </v-list-item-title>
-                      <v-icon @click="fetchedIncome.splice(revenueList.indexOf(revenue), 1)">
-                        mdi-delete
-                      </v-icon>
-                    </div>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list-item-group>
-              <v-alert v-else :value="true" type="info">
-                Nenhuma receita cadastrada.
-              </v-alert>
-            </v-list>
-          </v-card-text>
-        </v-card>
+        <ListAllTransactions style="margin-top: 24px;" />
       </v-col>
     </v-row>
   </v-container>
@@ -98,12 +70,14 @@
 
 <script>
 import FutureBalance from "@/components/FutureBalance.vue";
+import ListAllTransactions from "@/components/ListAllTransactions.vue";
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Revenue",
   components: {
-    FutureBalance
+    FutureBalance,
+    ListAllTransactions
   },
   data() {
     return {
@@ -118,10 +92,14 @@ export default {
   mounted() {
     let nowDate = new Date();
     this.fetchIncome(nowDate);
+    this.$store.dispatch("getTransactions", nowDate);
   },
   computed: {
     fetchedIncome() {
       return this.$store.state.income;
+    },
+    transactions() {
+      return this.$store.state.transactions;
     }
   },
   methods: {
@@ -129,11 +107,13 @@ export default {
       this.newRevenue.date = new Date(this.newRevenue.date).toISOString().slice(0, 10);
       this.$store.dispatch("addIncome", this.newRevenue).then(() => {
         this.fetchIncome(this.newRevenue.date);
+      }).catch((error) => {
+        console.log(error);
       });
     },
     fetchIncome(date) {
       this.$store.dispatch("getBalance", date).then(() => {
-        this.revenueList.push(this.$store.state.balance);
+        this.newRevenue.amount = this.$store.state.balance;
       });
     }
   }

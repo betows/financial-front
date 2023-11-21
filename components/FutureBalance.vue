@@ -2,26 +2,15 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card>
+        <v-card style="height: 242px;">
           <v-card-title class="headline">
             Projeção de saldo futuro
           </v-card-title>
           <v-card-text>
-            <v-row>
+            <!-- <v-row>
               <v-col>
                 <v-form @submit.prevent="calculateFutureBalance">
                   <v-row>
-                    <v-col>
-                      <v-text-field
-                        v-model="futureBalanceDate"
-                        label="Data de projeção"
-                        outlined
-                        type="date"
-                        required
-                        dense
-                      />
-                    </v-col>
-
                     <v-col>
                       <v-btn type="submit" color="info">
                         Calcular balanço futuro
@@ -30,11 +19,11 @@
                   </v-row>
                 </v-form>
               </v-col>
-            </v-row>
+            </v-row> -->
 
             <v-row>
               <v-col>
-                <v-alert v-if="futureBalance !== null" :value="true" type="success">
+                <v-alert v-if="futureBalance !== null" :value="true" type="info">
                   Seu saldo projetado em {{ futureBalanceDate }} será de: R${{ futureBalance }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">
