@@ -40,9 +40,21 @@
               <v-list-item-group v-if="filteredTransactions.length > 0">
                 <v-list-item v-for="transaction in filteredTransactions" :key="transaction.id">
                   <v-list-item-content>
-                    <v-list-item-title>
-                      {{ transaction.category }} - R$ {{ transaction.amount }} - {{ transaction.date }}
-                    </v-list-item-title>
+                    <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                      <div>
+                        {{ transaction.category }}
+                      </div>
+                      <div>
+                        R$ {{ transaction.amount }} 
+                      </div>
+                      <div>
+                        {{ formatDate(transaction.date) }}
+                      </div>
+                      
+                      <!-- <v-icon small @click="deleteTransaction(transaction.id)">
+                        mdi-delete
+                      </v-icon> -->
+                    </div>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
@@ -61,16 +73,22 @@
 export default {
   data() {
     return {
-      selectedFilters: [],       // Selected filters for transactions
-      transactions: [],          // List of all transactions (income and expenses)
-      transactionFilters: []     // Categories for filtering transactions
+      selectedFilters: [],       
+      transactionFilters: []    
     };
   },
-  // You may want to fetch transactions when the component is created
-  created() {
+  mounted() {
     this.fetchTransactions();
   },
   computed: {
+    transactions: {
+      get() {
+        return this.$store.state.transactions;
+      },
+      set(value) {
+        this.$store.commit("setTransactions", value);
+      }
+    },
     filteredTransactions() {
       // Filter transactions based on the selected categories
       return this.selectedFilters.length > 0
@@ -82,10 +100,12 @@ export default {
     // Simulate fetching transactions from the backend
     fetchTransactions() {
       this.$store.dispatch("getTransactions").then(() => {
-        this.transactions = this.$store.state.transactions;
         this.transactionFilters = [...new Set(this.transactions.map(transaction => transaction.category))];
-        this.transactionFilters.unshift("Todos");
       });
+    },
+    formatDate(date) {
+      let formattedDate = new Date(date);
+      return formattedDate.toLocaleDateString("pt-BR");
     }
   }
 };

@@ -30,8 +30,6 @@
                     v-model="newRevenue.amount"
                     label="Valor"
                     outlined
-                    type="number"
-                    :v-mask="'###.##'"
                     required
                     dense
                   />
@@ -64,7 +62,7 @@
         </div>
 
         <!-- Listagem de receitas -->
-        <ListAllTransactions style="margin-top: 24px;" />
+        <ListAllTransactions v-if="!loadingIncome" style="margin-top: 24px;" />
       </v-col>
     </v-row>
   </v-container>
@@ -91,6 +89,7 @@ export default {
         date: "",
         type: "RECEITA"
       },
+      loadingIncome: false,
       categoriasReceita: ["SALARIO", "DECIMO_TERCEIRO", "FERIAS", "OUTROS"]
     };
   },
@@ -117,8 +116,11 @@ export default {
       });
     },
     fetchIncome(date) {
+      this.loadingIncome = true;
       this.$store.dispatch("getBalance", date).then(() => {
-        this.newRevenue.amount = this.$store.state.balance;
+        this.$store.dispatch("getCurrentBalance");
+        this.$store.dispatch("getTransactions");
+        this.loadingIncome = false;
       });
     },
     formatDate(date) {

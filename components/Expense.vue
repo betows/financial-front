@@ -80,7 +80,13 @@ export default {
   methods: {
     addExpense() {
       this.expense.amount = parseFloat(this.expense.amount);
-      this.$store.dispatch("addExpense", this.expense);
+      this.expense.date = this.formatDate(this.expense.date);
+      this.$store.dispatch("addExpense", this.expense).then(() => {
+        this.$store.dispatch("getBalance");
+      });
+    },
+    formatDate(date) {
+      return date.split("-").reverse().join("/");
     }
   }
 
