@@ -1,6 +1,6 @@
 <template>
   <v-container style="padding: 0px;">
-    <v-card style="border-radius: 12px;">
+    <v-card style="border-radius: 12px; padding: 8px;">
       <v-card-title class="headline">
         Todas as transações
       </v-card-title>
@@ -19,7 +19,6 @@
               small-chips
               allow-overflow
               :menu-props="{ offsetY: true }"
-              dense
             >
               <template #selection="{ item }">
                 <v-chip small>
@@ -41,14 +40,14 @@
             <v-list>
               <v-list-item-group v-if="filteredTransactions.length > 0">
                 <v-list-item v-for="(transaction, index) in filteredTransactions" :key="index">
-                  <v-list-item-content style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                  <v-list-item-content @click="seeDetails(transaction)" style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
                     <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-between;">
                       <!-- Fixed width for the category column -->
-                      <div style="width: 150px;">
+                      <div style="width: 150px; font-weight: 700;">
                         {{ formatCategory(transaction.category) }}
                       </div>
-                      <div :style="'color: ' + getTransactionColor(transaction)">
-                        {{ transaction.type == "RECEITA" ? "+" + "R$" + " " + transaction.amount : "-" + "R$" + " " + transaction.amount }} 
+                      <div :style="'font-weight: 700;' + 'color: ' + getTransactionColor(transaction)">
+                        {{ formatCurrency(transaction.amount, transaction.type) }} 
                       </div>
                       <div>
                         {{ formatDate(transaction.date) }}
@@ -68,6 +67,43 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <v-dialog v-model="seeDetailsDialog" width="500px">
+      <v-card>
+        <v-card-title style="display: flex; flex-direction: row; justify-content: space-between;">
+          Detalhes da transação 
+          <v-icon @click="seeDetailsDialog = false">
+            mdi-close
+          </v-icon>
+        </v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col>
+              <v-alert v-if="transactionDetails !== null" :value="true" :color="transactionDetails.type === 'RECEITA' ? '#2E8B57' : '#880808'"> 
+                <div style="display: flex; flex-direction: column;"> 
+                  <div style="display: flex; flex-direction: row; font-weight: 700;">
+                    <v-icon size="18">
+                      mdi-currency-usd
+                    </v-icon>
+                    {{ transactionDetails.type === 'RECEITA' ? 'Receita' : 'Despesa' }}
+                  </div>
+                  <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; margin: 16px 0px 0px 6px;">
+                    <div>
+                      No dia {{ formatDate(transactionDetails.date) }} você adicionou uma transação na categoria {{ formatCategory(transactionDetails.category) }}
+                    </div>
+                    <div :style="'font-weight: 700; align-self: flex-start;'">
+                      no valor de {{ transactionDetails.amount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }} 
+                    </div>
+                  </div>
+                </div>
+              </v-alert>
+              <v-alert v-else :value="true" type="info">
+                Sem dados disponíveis
+              </v-alert>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -75,7 +111,9 @@
 export default {
   data() {
     return {
-      selectedFilters: []       
+      selectedFilters: [],
+      transactionDetails: null,
+      seeDetailsDialog: false       
     };
   },
   props: {
@@ -94,6 +132,18 @@ export default {
       return this.selectedFilters.length > 0
         ? this.transactions.filter(transaction => this.selectedFilters.includes(transaction.category))
         : this.transactions;
+    },
+    futureBalance() {
+      // Calculate the future balance based on the transactions
+      let balance = 0;
+      this.transactions.forEach(transaction => {
+        if (transaction.type === "RECEITA") {
+          balance += transaction.amount;
+        } else {
+          balance -= transaction.amount;
+        }
+      });
+      return balance;
     }
   },
   methods: {
@@ -129,6 +179,13 @@ export default {
     },
     getTransactionColor(transaction) {
       return transaction.type === "RECEITA" ? "#0FFF50" : "#FF3131";
+    },
+    formatCurrency(value, type) {
+      return type === "RECEITA" ? value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "-" + value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    },
+    seeDetails(transaction) {
+      this.transactionDetails = transaction;
+      this.seeDetailsDialog = true;
     }
   }
 };

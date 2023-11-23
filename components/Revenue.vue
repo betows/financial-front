@@ -182,6 +182,7 @@ export default {
       this.loadingIncome = true;
       this.$store.dispatch("getBalance").then(() => {
         this.$store.dispatch("getCurrentBalance");
+        this.$store.dispatch("getBalance");
         this.$store.dispatch("getTransactions");
         this.loadingIncome = false;
         console.log(this.transactions);

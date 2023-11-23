@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card style="height: 242px; border-radius: 12px;">
+        <v-card style="height: 242px; border-radius: 12px; padding: 8px;">
           <v-card-title class="headline">
             Projeção de saldo futuro
           </v-card-title>
