@@ -82,8 +82,8 @@
           </template>
         </v-snackbar>
         <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 24px; gap: 26px; margin-bottom: 16px;">
-          <Balance :current-balance="currentBalance" style="padding: 0px; border-radius: 12px; height: auto;" />
-          <FutureBalance :future-balance="balance" style="padding: 0px; border-radius: 12px;" />
+          <Balance :loading="loadingIncome" :current-balance="currentBalance" style="padding: 0px; border-radius: 12px; height: auto;" />
+          <FutureBalance :loading="loadingIncome" :future-balance="balance" style="padding: 0px; border-radius: 12px;" />
         </div>
 
         <!-- Listagem de receitas -->
@@ -168,6 +168,23 @@ export default {
   mounted() {
     this.fetchTransactions();
   },
+  watch: {
+    balance(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.$store.dispatch("getCurrentBalance");
+      }
+    },
+    transactions(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.$store.dispatch("getCurrentBalance");
+      }
+    },
+    fetchedIncome(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.$store.dispatch("getCurrentBalance");
+      }
+    }
+  },
   computed: {
     fetchedIncome() {
       return this.$store.state.income;
@@ -212,12 +229,10 @@ export default {
     },
     fetchTransactions() {
       this.loadingIncome = true;
-      this.$store.dispatch("getBalance").then(() => {
+      this.$store.dispatch("getTransactions").then(() => {
         this.$store.dispatch("getCurrentBalance");
         this.$store.dispatch("getBalance");
-        this.$store.dispatch("getTransactions");
         this.loadingIncome = false;
-        console.log(this.transactions);
       });
     },
     formatDate(date) {

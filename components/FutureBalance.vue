@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card style="height: 242px; border-radius: 12px; padding: 8px;">
+        <v-card v-if="!loading" style="height: 242px; border-radius: 12px; padding: 8px;">
           <v-card-title class="headline">
             Projeção de saldo futuro
           </v-card-title>
@@ -24,7 +24,7 @@
             <v-row>
               <v-col>
                 <v-alert v-if="futureBalance !== null" :value="true" :color="futureBalance > 0 ? '#2E8B57' : '#880808'">
-                  <v-icon> mdi-account-cash-outline </v-icon> saldo projetado é de: R$ {{ futureBalance }}
+                  <v-icon> mdi-account-cash-outline </v-icon> O saldo projetado é de: R$ {{ futureBalance.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">
                   Sem dados de projeção disponíveis
@@ -33,6 +33,12 @@
             </v-row>
           </v-card-text>
         </v-card>
+        <div v-else style="padding: 12px;">
+          <v-progress-circular
+            indeterminate
+            color="green"
+          />
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -48,6 +54,10 @@ export default {
   props: {
     futureBalance: {
       type: Number,
+      required: true
+    },
+    loading: {
+      type: Boolean,
       required: true
     }
   },

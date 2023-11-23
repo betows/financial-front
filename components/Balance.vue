@@ -3,7 +3,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card style="height: 242px; border-radius: 12px; padding: 8px;">
+        <v-card v-if="!loading" style="height: 242px; border-radius: 12px; padding: 8px;">
           <v-card-title class="headline">
             Saldo atual
           </v-card-title>
@@ -11,7 +11,7 @@
             <v-row>
               <v-col>
                 <v-alert v-if="currentBalance !== null" :value="true" :color="currentBalance > 0 ? '#2E8B57' : '#880808'">
-                  <v-icon> mdi-currency-usd </v-icon>  Seu saldo atual é de: R$ {{ currentBalance }}
+                  <v-icon> mdi-currency-usd </v-icon>  Seu saldo atual é de: R$ {{ currentBalance.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}
                 </v-alert>
                 <v-alert v-else :value="true" type="info">
                   Sem dados disponíveis
@@ -20,6 +20,12 @@
             </v-row>
           </v-card-text>
         </v-card>
+        <div v-else style="padding: 12px;">
+          <v-progress-circular
+            indeterminate
+            color="green"
+          />
+        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -34,6 +40,10 @@ export default {
   props: {
     currentBalance: {
       type: Number,
+      required: true
+    },
+    loading: {
+      type: Boolean,
       required: true
     }
   },
