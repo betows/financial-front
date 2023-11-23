@@ -48,7 +48,7 @@
                         {{ formatCategory(transaction.category) }}
                       </div>
                       <div :style="'color: ' + getTransactionColor(transaction)">
-                        R$ {{ transaction.amount }} 
+                        {{ transaction.type == "RECEITA" ? "+" + "R$" + " " + transaction.amount : "-" + "R$" + " " + transaction.amount }} 
                       </div>
                       <div>
                         {{ formatDate(transaction.date) }}
