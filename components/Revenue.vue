@@ -82,8 +82,8 @@
           </template>
         </v-snackbar>
         <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 24px; gap: 26px; margin-bottom: 16px;">
-          <Balance :loading="loadingIncome" :current-balance="currentBalance" style="padding: 0px; border-radius: 12px; height: auto;" />
-          <FutureBalance :loading="loadingIncome" :future-balance="balance" style="padding: 0px; border-radius: 12px;" />
+          <Balance :current-balance="currentBalance" style="padding: 0px; border-radius: 12px; height: auto;" />
+          <FutureBalance :future-balance="balance" style="padding: 0px; border-radius: 12px;" />
         </div>
 
         <!-- Listagem de receitas -->

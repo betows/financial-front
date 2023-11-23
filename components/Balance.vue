@@ -3,7 +3,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card v-if="!loading" style="height: 242px; border-radius: 12px; padding: 8px;">
+        <v-card style="height: 242px; border-radius: 12px; padding: 8px;">
           <v-card-title class="headline">
             Saldo atual
           </v-card-title>
@@ -20,12 +20,6 @@
             </v-row>
           </v-card-text>
         </v-card>
-        <div v-else style="padding: 12px;">
-          <v-progress-circular
-            indeterminate
-            color="green"
-          />
-        </div>
       </v-col>
     </v-row>
   </v-container>
@@ -40,10 +34,6 @@ export default {
   props: {
     currentBalance: {
       type: Number,
-      required: true
-    },
-    loading: {
-      type: Boolean,
       required: true
     }
   },
