@@ -83,6 +83,7 @@ export default {
       this.expense.date = this.formatDate(this.expense.date);
       this.$store.dispatch("addExpense", this.expense).then(() => {
         this.$store.dispatch("getBalance");
+        this.$store.dispatch("getTransactions");
       });
     },
     formatDate(date) {

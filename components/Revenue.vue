@@ -139,8 +139,7 @@ export default {
     };
   },
   mounted() {
-    let nowDate = new Date();
-    this.fetchIncome(nowDate);
+    this.fetchTransactions();
   },
   computed: {
     fetchedIncome() {
@@ -168,17 +167,24 @@ export default {
     addRevenue() {
       this.newRevenue.date = this.formatDate(this.newRevenue.date);
       this.$store.dispatch("addIncome", this.newRevenue).then(() => {
-        this.fetchIncome(this.newRevenue.date);
+        this.fetchTransactions();
+        this.newRevenue = {
+          category: "",
+          amount: null,
+          date: "",
+          type: "RECEITA"
+        };
       }).catch((error) => {
         console.log(error);
       });
     },
-    fetchIncome(date) {
+    fetchTransactions() {
       this.loadingIncome = true;
-      this.$store.dispatch("getBalance", date).then(() => {
+      this.$store.dispatch("getBalance").then(() => {
         this.$store.dispatch("getCurrentBalance");
         this.$store.dispatch("getTransactions");
         this.loadingIncome = false;
+        console.log(this.transactions);
       });
     },
     formatDate(date) {
