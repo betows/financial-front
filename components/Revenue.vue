@@ -20,10 +20,12 @@
                     label="Categoria"
                     item-text="text"
                     item-value="value"
+                    :error-messages="showError ? 'Campo obrigatório' : ''"
                     outlined
                     required
                     dense
                     :menu-props="{ offsetY: true }"
+                    @input="showError = false"
                   />
                 </v-col>
 
@@ -31,9 +33,12 @@
                   <v-text-field
                     v-model="newRevenue.amount"
                     label="Valor"
+                    :error-messages="showError ? 'Campo obrigatório' : ''"
                     outlined
                     required
                     dense
+                    :mask="mask"
+                    @input="showError = false"
                   />
                 </v-col>
 
@@ -42,9 +47,11 @@
                     v-model="newRevenue.date"
                     label="Data"
                     outlined
+                    :error-messages="showError ? 'Campo obrigatório' : ''"
                     type="date"
                     required
                     dense
+                    @input="showError = false"
                   />
                 </v-col>
 
@@ -58,6 +65,22 @@
           </v-card-text>
           <Expense :expense-categories="expenseCategories" />
         </v-card>
+        <v-snackbar
+          top
+          v-model="snackbar"
+        >
+          {{ text }}
+
+          <template #actions>
+            <v-btn
+              color="pink"
+              variant="text"
+              @click="snackbar = false"
+            >
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
         <div style="display: flex; flex-direction: row; justify-content: space-between; margin-top: 24px; gap: 26px; margin-bottom: 16px;">
           <Balance :current-balance="currentBalance" style="padding: 0px; border-radius: 12px; height: auto;" />
           <FutureBalance :future-balance="balance" style="padding: 0px; border-radius: 12px;" />
@@ -91,6 +114,10 @@ export default {
         date: "",
         type: "RECEITA"
       },
+      mask: "###.##",
+      snackbar: false,
+      showError: false,
+      text: "Preencha todos os campos necessários da receita!",
       loadingIncome: false,
       revenueCategories: [{
         text: "Salário",
@@ -165,6 +192,11 @@ export default {
   },
   methods: {
     addRevenue() {
+      if (this.requiredFieldsAreEmpty(this.newRevenue)) {
+        this.snackbar = true;
+        this.showError = true;
+        return;
+      }
       this.newRevenue.date = this.formatDate(this.newRevenue.date);
       this.$store.dispatch("addIncome", this.newRevenue).then(() => {
         this.fetchTransactions();
@@ -190,6 +222,18 @@ export default {
     },
     formatDate(date) {
       return date.split("-").reverse().join("/");
+    },
+    handleFormatCurrency() {
+      this.newRevenue.amount.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    },
+    requiredFieldsAreEmpty(revenue) {
+      if (revenue.category === "" || revenue.amount === null || revenue.date === "") {
+        return true;
+      }
+      return false;
     }
   }
 };

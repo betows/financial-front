@@ -20,7 +20,9 @@
                   outlined
                   required
                   dense
+                  :error-messages="showError ? 'Campo obrigatório' : ''"
                   :menu-props="{ offsetY: true }"
+                  @input="showError = false"
                 />
               </v-col>
 
@@ -29,9 +31,11 @@
                   v-model="expense.amount"
                   label="Valor"
                   outlined
+                  :error-messages="showError ? 'Campo obrigatório' : ''"
                   type="number"
                   required
                   dense
+                  @input="showError = false"
                 />
               </v-col>
 
@@ -42,7 +46,9 @@
                   outlined
                   type="date"
                   required
+                  :error-messages="showError ? 'Campo obrigatório' : ''"
                   dense
+                  @input="showError = false"
                 />
               </v-col>
 
@@ -56,6 +62,22 @@
         </v-card-text>
       </v-col>
     </v-row>
+    <v-snackbar
+      top
+      v-model="snackbar"
+    >
+      {{ text }}
+
+      <template #actions>
+        <v-btn
+          color="pink"
+          variant="text"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -68,7 +90,10 @@ export default {
         amount: "",
         date: "",
         type: "EXPENSE"
-      }
+      },
+      snackbar: false,
+      showError: false,
+      text: "Preencha todos os campos obrigatórios da despesa!"
     };
   },
   props: {
@@ -79,10 +104,16 @@ export default {
   },
   methods: {
     addExpense() {
+      if (!this.expense.category || !this.expense.amount || !this.expense.date) {
+        this.snackbar = true;
+        this.showError = true;
+        return;
+      }
       this.expense.amount = parseFloat(this.expense.amount);
       this.expense.date = this.formatDate(this.expense.date);
       this.$store.dispatch("addExpense", this.expense).then(() => {
         this.$store.dispatch("getBalance");
+        this.$store.dispatch("getCurrentBalance");
         this.$store.dispatch("getTransactions");
       });
     },
